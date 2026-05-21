@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
  */
 export default function ProductPreviewSlider({ products, activeProduct, onSelectProduct }) {
   return (
-    <div className="w-full flex justify-start mt-6 md:mt-8 mb-4 relative z-20">
+    <div className="max-w-7xl mx-auto w-full px-4 md:px-8 flex justify-start -mt-20 md:-mt-28 mb-16 relative z-20">
       <div className="flex gap-4 items-center bg-[#022121]/80 backdrop-blur-md px-5 py-3 rounded-3xl border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
         {products.map((product) => {
           const isActive = activeProduct.id === product.id;
