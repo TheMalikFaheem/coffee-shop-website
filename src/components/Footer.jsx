@@ -35,14 +35,14 @@ export default function Footer() {
               </svg>
             </div>
 
-            {/* Detailed Circular Crest */}
+            {/* Circular Crest */}
             <div className="relative w-20 h-20 shrink-0">
               <svg viewBox="0 0 120 120" className="w-full h-full text-brand-accent/25" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="60" cy="60" r="52" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 3" fill="none" />
                 <circle cx="60" cy="60" r="44" stroke="currentColor" strokeWidth="0.8" fill="none" />
                 <path id="textPath-crest" d="M 60,60 m -35,0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" />
                 <text fontSize="5.5" fontFamily="Montserrat" fontWeight="900" fill="currentColor" letterSpacing="0.8">
-                  <textPath href="#textPath-crest" startOffset="0%">• STARBUCKS COFFEE EST. 1971 • SEATTLE</textPath>
+                  <textPath href="#textPath-crest" startOffset="0%">• VERDANT COFFEE CO. EST. 2026 • ROASTERY</textPath>
                 </text>
                 <path d="M 60 40 L 60 80 M 40 60 L 80 60" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1 3" opacity="0.5" />
               </svg>
@@ -51,10 +51,10 @@ export default function Footer() {
 
           <div className="space-y-3">
             <span className="font-montserrat font-black text-xl tracking-widest text-white">
-              STARBUCKS
+              VERDANT
             </span>
             <p className="text-brand-textMuted font-poppins text-xs leading-relaxed max-w-sm">
-              Discover the blend with a modern coffee moment. The classic Frappuccino Coffee Cup, reimagined in a luxurious dark green aesthetic.
+              Discover the blend with a modern coffee moment. Our craft single-origin blends, reimagined in a luxurious dark green aesthetic.
             </p>
           </div>
         </div>
@@ -114,13 +114,13 @@ export default function Footer() {
       {/* Cinematic Faded Watermark at Bottom */}
       <div className="w-full flex justify-center mt-20 select-none pointer-events-none opacity-5">
         <h2 className="font-montserrat font-black text-6xl sm:text-8xl md:text-[140px] tracking-widest text-[#008248] uppercase leading-none">
-          CONTACT
+          VERDANT
         </h2>
       </div>
 
       {/* Copywrite details */}
       <div className="max-w-6xl mx-auto mt-6 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-[10px] font-bold font-montserrat text-brand-textMuted/60 gap-4">
-        <span>© 2026 STARBUCKS COFFEE COMPANY. ALL RIGHTS RESERVED.</span>
+        <span>© 2026 VERDANT COFFEE CO. ALL RIGHTS RESERVED.</span>
         <div className="flex gap-4">
           <a href="#privacy" className="hover:text-white transition-colors">PRIVACY POLICY</a>
           <a href="#terms" className="hover:text-white transition-colors">TERMS OF USE</a>

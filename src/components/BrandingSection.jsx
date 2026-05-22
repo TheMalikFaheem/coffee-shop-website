@@ -24,7 +24,7 @@ export default function BrandingSection() {
   );
 
   return (
-    <section className="relative py-32 bg-[#021A1A] overflow-hidden w-full select-none" id="rewards">
+    <section className="relative py-32 bg-[#021A1A] overflow-hidden w-full select-none" id="about-brand">
       
       {/* Background Floating Beans */}
       <CoffeeBeans count={6} />
@@ -46,24 +46,24 @@ export default function BrandingSection() {
       <div className="absolute top-1/3 left-0 right-0 h-14 bg-brand-primary/95 flex items-center z-10 origin-center rotate-[-4deg] scale-105 shadow-2xl border-y border-brand-accent/20">
         <div className="w-full overflow-hidden whitespace-nowrap flex py-2 select-none">
           <div className="animate-marquee flex gap-16 text-white font-montserrat font-black text-lg md:text-xl tracking-widest uppercase">
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
           </div>
           <div className="animate-marquee flex gap-16 text-white font-montserrat font-black text-lg md:text-xl tracking-widest uppercase" aria-hidden="true">
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
-            <span>STARBUCKS</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
+            <span>VERDANT CAFÉ</span>
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@ export default function BrandingSection() {
               className="glass-card p-6 rounded-3xl max-w-sm border border-white/10"
             >
               <p className="text-brand-light font-poppins text-sm md:text-base leading-relaxed">
-                At Starbucks, every single coffee bean is roasted to perfection, ensuring that every sip becomes a story of rich flavor and warmth.
+                At Verdant Café, every single coffee bean is roasted to perfection, ensuring that every sip becomes a story of rich flavor and warmth.
               </p>
             </motion.div>
             

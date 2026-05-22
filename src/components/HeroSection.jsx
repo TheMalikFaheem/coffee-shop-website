@@ -1,119 +1,129 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Bean, Compass, Award, Flame, ChevronRight } from 'lucide-react';
 import CoffeeCup from './CoffeeCup';
 import CoffeeBeans from './CoffeeBeans';
+import { Link } from './Router';
 
-export default function HeroSection({ activeProduct, onAddToCart }) {
+export default function HeroSection({ activeProduct }) {
+  // Render strength indicator using coffee bean icons
+  const renderStrength = (strength) => {
+    return (
+      <div className="flex gap-1.5 items-center">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Bean
+            key={i}
+            size={14}
+            className={`transition-all duration-500 ${
+              i < strength
+                ? 'text-brand-accent fill-brand-accent drop-shadow-[0_0_4px_rgba(0,168,98,0.6)] scale-110'
+                : 'text-white/20'
+            }`}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <section className="w-full min-h-screen pt-28 pb-12 flex items-center justify-center overflow-hidden bg-transparent relative select-none">
-      {/* Dynamic Background Beans */}
+    <section className="w-full min-h-screen pt-32 pb-16 flex items-center justify-center overflow-hidden bg-transparent relative select-none">
+      {/* Background Floating Beans */}
       <CoffeeBeans count={8} />
 
       {/* Hero Content Container */}
       <div className="max-w-7xl mx-auto w-full px-4 md:px-8 z-10">
-        {/* Hero Grid Container */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full">
+        
+        {/* 3-Column Grid for Desktop (Left: Text copy, Center: Floating cup, Right: Specifications) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center w-full">
           
-          {/* LEFT SIDE: Copy & Call To Action (5 Columns) */}
-          <div className="lg:col-span-5 flex flex-col justify-center text-left">
+          {/* COLUMN 1: Editorial Description & Info (5 columns) */}
+          <div className="lg:col-span-5 flex flex-col justify-center text-left space-y-6 order-2 lg:order-1">
             
-            {/* Subtitle with reveal animation */}
-            <motion.div
-              key={`subtitle-${activeProduct.id}`}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-xs md:text-sm font-bold tracking-widest text-brand-accent uppercase mb-2 font-montserrat"
-            >
-              {activeProduct.subtitle}
-            </motion.div>
+            {/* Origin & Roast tag */}
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider text-brand-accent">
+                <Compass size={12} />
+                {activeProduct.origin}
+              </span>
+              <span className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider text-brand-textMuted">
+                <Flame size={12} />
+                {activeProduct.roast}
+              </span>
+            </div>
 
-            {/* Heading with spring transition */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight font-montserrat text-white leading-none mb-6"
-            >
-              WHAT'S <span className="text-brand-accent">YOURS?</span>
-            </motion.h1>
+            {/* Product Title */}
+            <div className="space-y-2">
+              <p className="text-xs md:text-sm font-bold tracking-[0.25em] text-brand-primary uppercase font-montserrat">
+                {activeProduct.subtitle}
+              </p>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight font-montserrat text-white leading-none">
+                {activeProduct.name.split(' ').slice(0, -1).join(' ')} <span className="text-brand-accent">{activeProduct.name.split(' ').pop()}</span>
+              </h1>
+              <div className="w-20 h-1 bg-brand-primary/60 rounded-full mt-4" />
+            </div>
 
-            {/* Animating product info transitions on switch */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeProduct.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.4 }}
-                className="space-y-6"
-              >
-                <div>
-                  <h2 className="text-xl md:text-2xl font-bold font-montserrat text-brand-light uppercase tracking-wide">
-                    {activeProduct.name}
-                  </h2>
-                  <div className="w-16 h-1 bg-brand-accent mt-2 rounded-full" />
-                </div>
+            {/* Product Description */}
+            <p className="text-brand-textMuted text-sm md:text-base font-poppins leading-relaxed max-w-md">
+              {activeProduct.description}
+            </p>
 
-                <p className="text-brand-textMuted text-sm md:text-base font-poppins leading-relaxed max-w-md">
-                  {activeProduct.description}
-                </p>
-
-                {/* Price & Rating Row */}
-                <div className="flex items-center gap-6 pt-2">
-                  <div className="flex flex-col">
-                    <span className="text-xs tracking-wider text-brand-accent font-bold font-montserrat uppercase">
-                      BEST RATING
-                    </span>
-                    <span className="text-3xl font-extrabold text-white font-poppins mt-0.5">
-                      {activeProduct.price}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Add to Cart Button */}
-                <div className="pt-2">
-                  <motion.button
-                    onClick={() => onAddToCart(activeProduct)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="glow-btn bg-white hover:bg-brand-light text-brand-dark px-8 py-3.5 rounded-full font-bold font-montserrat text-sm tracking-widest shadow-xl flex items-center gap-2 transition-all duration-300"
+            {/* Flavor Notes Grid */}
+            <div className="space-y-2">
+              <span className="text-xs font-bold tracking-widest text-brand-accent/80 font-montserrat uppercase block">
+                Flavor Profiles
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {activeProduct.flavorNotes?.map((note, index) => (
+                  <span
+                    key={index}
+                    className="text-xs px-3 py-1 rounded-lg bg-brand-primary/10 border border-brand-primary/20 text-brand-light font-poppins font-medium"
                   >
-                    ADD TO CART
-                  </motion.button>
-                </div>
-              </motion.div>
-            </AnimatePresence>
+                    {note}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Premium CTA Button */}
+            <div className="pt-2">
+              <Link
+                href={`/menu/${activeProduct.slug}`}
+                className="glow-btn inline-flex items-center gap-2 bg-white hover:bg-brand-light text-brand-dark px-8 py-3.5 rounded-full font-bold font-montserrat text-xs tracking-widest shadow-[0_10px_25px_rgba(0,0,0,0.3)] transition-all duration-300 group"
+              >
+                DISCOVER RECIPE & DETAILS
+                <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform duration-300 text-brand-primary" />
+              </Link>
+            </div>
           </div>
 
-          {/* RIGHT SIDE: Animated Visual Stack (7 Columns) */}
-          <div className="lg:col-span-7 relative flex items-center justify-center min-h-[400px] md:min-h-[500px]">
+          {/* COLUMN 2: Central Floating Coffee Cup Visual (4 columns) */}
+          <div className="lg:col-span-4 relative flex items-center justify-center min-h-[300px] md:min-h-[400px] order-1 lg:order-2">
             
-            {/* Big Colored Background Shape */}
+            {/* Big Colored Background Shape with gradient */}
             <motion.div
               key={`shape-${activeProduct.id}`}
-              initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
+              initial={{ opacity: 0, scale: 0.8, rotate: -15 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ type: "spring", stiffness: 100, damping: 15 }}
-              className={`absolute w-[280px] h-[360px] md:w-[350px] md:h-[450px] ${activeProduct.shapeBg} rounded-[50px] shadow-[0_25px_60px_rgba(0,0,0,0.4)] z-0`}
-            />
+              className={`absolute w-[240px] h-[320px] md:w-[280px] md:h-[380px] ${activeProduct.shapeBg} rounded-[50px] shadow-[0_25px_60px_rgba(0,0,0,0.5)] z-0 flex items-center justify-center overflow-hidden`}
+            >
+              {/* Internal glow radial gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/10" />
+            </motion.div>
 
-            {/* Giant Outline Text */}
+            {/* Large outline banner watermark behind the cup */}
             <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none select-none z-0 overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`giant-${activeProduct.id}`}
-                  initial={{ opacity: 0, y: 50 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -50 }}
+                  exit={{ opacity: 0, y: -30 }}
                   transition={{ duration: 0.5 }}
                   className="flex flex-col items-center leading-none"
                 >
-                  <span className="text-stroke-active text-6xl md:text-8xl font-black font-montserrat tracking-widest uppercase opacity-20 rotate-90 translate-x-20 md:translate-x-28">
-                    {activeProduct.bannerText}
-                  </span>
-                  <span className="text-white text-6xl md:text-8xl font-black font-montserrat tracking-widest uppercase opacity-10 rotate-90 translate-x-20 md:translate-x-28 mt-2">
+                  <span className="text-stroke text-7xl md:text-8xl font-black font-montserrat tracking-widest uppercase opacity-15 rotate-90 translate-x-20 md:translate-x-24">
                     {activeProduct.bannerText}
                   </span>
                 </motion.div>
@@ -125,38 +135,89 @@ export default function HeroSection({ activeProduct, onAddToCart }) {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`cup-${activeProduct.id}`}
-                  initial={{ scale: 0.6, rotate: -45, opacity: 0 }}
+                  initial={{ scale: 0.6, rotate: -35, opacity: 0 }}
                   animate={{ scale: 1, rotate: activeProduct.rotation, opacity: 1 }}
-                  exit={{ scale: 0.6, rotate: 45, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 100, damping: 15 }}
+                  exit={{ scale: 0.6, rotate: 35, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 90, damping: 14 }}
                 >
                   <CoffeeCup
-                    size="w-72 h-72 md:w-[420px] md:h-[420px]"
+                    size="w-60 h-60 md:w-72 h-72 lg:w-80 lg:h-80"
                     rotation={activeProduct.rotation}
                     animateFloat={true}
-                    hoverScale={1.05}
+                    hoverScale={1.08}
                     shadow={true}
+                    imgFilter={activeProduct.imgFilter}
                   />
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            {/* Additional decorative floating elements */}
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute top-1/4 left-1/4 z-20 pointer-events-none"
-            >
-              <div className="w-3 h-3 rounded-full bg-brand-accent blur-[2px] opacity-60" />
-            </motion.div>
+            {/* Spotlight lighting filter effect behind the cup */}
+            <div className="absolute w-[300px] h-[300px] bg-brand-accent/20 rounded-full blur-[80px] pointer-events-none z-0" />
+          </div>
+
+          {/* COLUMN 3: Technical Specifications Panel (3 columns) */}
+          <div className="lg:col-span-3 flex flex-col space-y-6 order-3 justify-center text-left bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md">
             
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
-              className="absolute bottom-1/4 right-1/4 z-20 pointer-events-none"
-            >
-              <div className="w-5 h-5 rounded-full bg-brand-primary blur-[3px] opacity-40" />
-            </motion.div>
+            {/* Header */}
+            <div>
+              <span className="text-[10px] tracking-[0.2em] font-extrabold text-brand-accent font-montserrat uppercase block">
+                Spec Sheet
+              </span>
+              <h3 className="text-lg font-bold font-montserrat text-white uppercase tracking-wider">
+                Blend Profile
+              </h3>
+              <div className="w-10 h-0.5 bg-brand-primary mt-1" />
+            </div>
+
+            {/* Strength indicator */}
+            <div className="space-y-1.5 border-b border-white/5 pb-4">
+              <span className="text-xs text-brand-textMuted font-poppins block">
+                Caffeine / Roast Strength
+              </span>
+              {renderStrength(activeProduct.strength)}
+            </div>
+
+            {/* Preparation style */}
+            <div className="space-y-1 border-b border-white/5 pb-4">
+              <span className="text-xs text-brand-textMuted font-poppins block">
+                Serving Style
+              </span>
+              <span className="text-sm font-bold text-white font-montserrat uppercase tracking-wider block">
+                {activeProduct.servingStyle}
+              </span>
+            </div>
+
+            {/* Key ingredients summary */}
+            <div className="space-y-2 border-b border-white/5 pb-4">
+              <span className="text-xs text-brand-textMuted font-poppins block">
+                Key Elements
+              </span>
+              <ul className="text-xs space-y-1 text-white/90 font-poppins">
+                {activeProduct.ingredients?.slice(0, 3).map((ing, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-brand-accent rounded-full" />
+                    <span className="font-semibold">{ing.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Nutritional Preview */}
+            <div className="space-y-1.5">
+              <span className="text-xs text-brand-textMuted font-poppins block">
+                Quick Facts
+              </span>
+              <div className="grid grid-cols-2 gap-2 text-[10px] font-bold font-montserrat text-white/70">
+                <div className="bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
+                  CAL: {activeProduct.nutrition?.calories}
+                </div>
+                <div className="bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
+                  CAFF: {activeProduct.nutrition?.caffeine}
+                </div>
+              </div>
+            </div>
+            
           </div>
 
         </div>

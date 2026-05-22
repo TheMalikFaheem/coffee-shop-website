@@ -1,149 +1,161 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingCart } from 'lucide-react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import ProductPreviewSlider from './components/ProductPreviewSlider';
-import CategoryTabs from './components/CategoryTabs';
-import ProductCarousel from './components/ProductCarousel';
 import BrandingSection from './components/BrandingSection';
 import PopularSection from './components/PopularSection';
-import BranchesSection from './components/BranchesSection';
+import IngredientsHighlight from './components/IngredientsHighlight';
+import BlogPreview from './components/BlogPreview';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
+import MenuView from './components/MenuView';
+import MenuDetailView from './components/MenuDetailView';
+import BlogView from './components/BlogView';
+import BlogPostDetailView from './components/BlogPostDetailView';
+import AdminView from './components/AdminView';
+import { Router, useRouter, Link } from './components/Router';
+import { getMenuItems } from './data/coffeeDb';
 
-// Hero Coffee Products
-const HERO_PRODUCTS = [
-  {
-    id: 1,
-    name: 'FRAPPUCCINO COFFEE DELIGHT',
-    subtitle: 'WHERE EVERY CUP TELLS A STORY.',
-    description: 'Indulge in the perfect blend of coffee and ice – the Frappuccino is your cold coffee escape. Elevate your coffee moment with a classic, ice Frappuccino delight.',
-    price: '$8.6',
-    shapeBg: 'bg-brand-primary', // Full Starbucks green shape background
-    bannerText: 'FRAPPUCCINO',
-    rotation: -12,
-    imgFilter: '', // Standard rich color
-  },
-  {
-    id: 2,
-    name: 'CARAMEL TWIST FRAPP',
-    subtitle: 'INDULGE IN SWEET HARMONY.',
-    description: 'Rich buttery caramel sauce meets ice, fresh milk, and brewed espresso for a sweet, creamy harmony. Completed with whipped cream and dark caramel drizzle.',
-    price: '$9.2',
-    shapeBg: 'bg-[#B07238]', // Warm caramel/brown shape background
-    bannerText: 'CARAMEL',
-    rotation: 18,
-    imgFilter: 'hue-rotate-[15deg] sepia(0.3) saturate(1.2) contrast(1.1)', // Warm caramel tint
-  },
-  {
-    id: 3,
-    name: 'VANILLA BEAN FRAPP',
-    subtitle: 'A CRUSH OF CREAMY BLISS.',
-    description: 'A rich, smooth, and creamy blend of real vanilla bean pods, cold milk, and crushed ice. Finished with whipped cream to elevate your sweet vanilla cravings.',
-    price: '$8.8',
-    shapeBg: 'bg-[#7A988D]', // Sage green shape background
-    bannerText: 'VANILLA',
-    rotation: -5,
-    imgFilter: 'brightness(1.15) saturate(0.75)', // Vanilla cream tint
-  },
-];
+function AppContent() {
+  const { path } = useRouter();
+  const [heroProducts, setHeroProducts] = useState([]);
+  const [activeProduct, setActiveProduct] = useState(null);
 
-export default function App() {
-  const [activeProduct, setActiveProduct] = useState(HERO_PRODUCTS[0]);
-  const [activeCategory, setActiveCategory] = useState('Drinks');
-  const [cartCount, setCartCount] = useState(0);
-  const [toastMessage, setToastMessage] = useState(null);
-
-  // Triggered when any item is added to the cart
-  const handleAddToCart = (product) => {
-    setCartCount((prev) => prev + 1);
+  // Synchronize dynamic products catalog with state
+  const loadData = () => {
+    const items = getMenuItems();
+    // Slice first 3 products for the home hero selection
+    const activeSlice = items.slice(0, 3);
+    setHeroProducts(activeSlice);
     
-    // Build customization message if exists
-    let message = `Added ${product.name} to cart!`;
-    if (product.customizations) {
-      message = `Added ${product.name} (${product.customizations.milk}, ${product.customizations.cream}) to cart!`;
+    if (activeSlice.length > 0) {
+      setActiveProduct((prev) => {
+        if (prev) {
+          const match = activeSlice.find((p) => p.slug === prev.slug);
+          if (match) return match;
+        }
+        return activeSlice[0];
+      });
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+    // Listen for custom CMS events so lists update in real-time
+    window.addEventListener('coffee_db_update', loadData);
+    return () => window.removeEventListener('coffee_db_update', loadData);
+  }, []);
+
+  // Conditional rendering router map
+  const renderView = () => {
+    if (path === '/' || path === '') {
+      return (
+        <>
+          {/* Main Hero Slider visual wrapper */}
+          <div className="w-full relative bg-[#021A1A]">
+            {activeProduct && <HeroSection activeProduct={activeProduct} />}
+            {heroProducts.length > 0 && activeProduct && (
+              <ProductPreviewSlider
+                products={heroProducts}
+                activeProduct={activeProduct}
+                onSelectProduct={setActiveProduct}
+              />
+            )}
+          </div>
+
+          {/* Popular creations selection */}
+          <PopularSection />
+
+          {/* Branding statement section */}
+          <BrandingSection />
+
+          {/* Ingredients Showcase cards */}
+          <IngredientsHighlight />
+
+          {/* Blog/Journal preview grid */}
+          <BlogPreview />
+
+          {/* Contact form card */}
+          <ContactSection />
+        </>
+      );
     }
 
-    setToastMessage(message);
+    if (path === '/menu') {
+      return <MenuView />;
+    }
 
-    // Clear toast after 3 seconds
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 3000);
+    if (path.startsWith('/menu/')) {
+      const slug = path.replace('/menu/', '');
+      return <MenuDetailView slug={slug} />;
+    }
+
+    if (path === '/blog') {
+      return <BlogView />;
+    }
+
+    if (path.startsWith('/blog/')) {
+      const slug = path.replace('/blog/', '');
+      return <BlogPostDetailView slug={slug} />;
+    }
+
+    if (path === '/admin') {
+      return <AdminView />;
+    }
+
+    // 404 Route Not Found fallback block
+    return (
+      <div className="min-h-screen bg-[#032B2B] flex flex-col items-center justify-center py-20 text-center select-none">
+        <div className="space-y-4 max-w-sm px-4">
+          <h2 className="text-3xl font-black font-montserrat text-white uppercase tracking-wider">404 - NOT FOUND</h2>
+          <p className="text-brand-textMuted text-xs font-poppins">
+            The premium catalog route you requested is unavailable or has been changed.
+          </p>
+          <Link
+            href="/"
+            className="inline-block mt-4 px-6 py-2.5 bg-brand-primary text-white text-xs font-bold font-montserrat tracking-widest rounded-full uppercase"
+          >
+            Go Back Home
+          </Link>
+        </div>
+      </div>
+    );
   };
 
   return (
     <div className="min-h-screen bg-brand-dark text-white selection:bg-brand-primary selection:text-white font-poppins relative overflow-x-hidden">
       
-      {/* Fixed Sticky Header */}
-      <Navbar cartCount={cartCount} />
+      {/* Global Header */}
+      <Navbar />
 
-      {/* Main Page Layout Stack */}
+      {/* Dynamic View container with Framer Motion transitions */}
       <main className="w-full flex flex-col items-center">
-        
-        {/* HERO AREA (Hero Section + Integrated Product Preview Slider) */}
-        <div className="w-full relative bg-[#021A1A]">
-          <HeroSection 
-            activeProduct={activeProduct} 
-            onAddToCart={handleAddToCart} 
-          />
-          <ProductPreviewSlider 
-            products={HERO_PRODUCTS} 
-            activeProduct={activeProduct} 
-            onSelectProduct={setActiveProduct} 
-          />
-        </div>
-
-        {/* CATEGORIES SECTION */}
-        <CategoryTabs 
-          activeTab={activeCategory} 
-          onSelectTab={setActiveCategory} 
-        />
-
-        {/* CUSTOM COFFEE CAROUSEL */}
-        <ProductCarousel onAddToCart={handleAddToCart} />
-
-        {/* BRANDING QUALITY STATEMENT */}
-        <BrandingSection />
-
-        {/* POPULAR SELECTIONS */}
-        <PopularSection onAddToCart={handleAddToCart} />
-
-        {/* BRANCH LOCATIONS MAPS */}
-        <BranchesSection />
-
-        {/* CONTACT FORM & CTA */}
-        <ContactSection />
-
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={path}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            className="w-full"
+          >
+            {renderView()}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
-      {/* FOOTER */}
+      {/* Global Footer */}
       <Footer />
 
-      {/* FLOATING ACTION TOAST BAR */}
-      <AnimatePresence>
-        {toastMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 350, damping: 25 }}
-            className="fixed bottom-6 right-6 z-50 bg-brand-primary border border-brand-accent/30 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm"
-          >
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-              <ShoppingCart size={16} className="text-white" />
-            </div>
-            <div className="text-left">
-              <p className="text-xs font-bold font-montserrat uppercase tracking-wider text-brand-light">Item Added</p>
-              <p className="text-xs font-semibold font-poppins text-white mt-0.5 line-clamp-2 leading-tight">
-                {toastMessage}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }

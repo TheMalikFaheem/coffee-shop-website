@@ -34,7 +34,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section className="relative py-20 bg-brand-dark px-4 md:px-8 select-none w-full" id="contact-us">
+    <section className="relative py-20 bg-brand-dark px-4 md:px-8 select-none w-full" id="contact-section">
       {/* Decorative Blur BG */}
       <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-[100px] pointer-events-none" />
 
