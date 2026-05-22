@@ -44,5 +44,11 @@ jobs:
           ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
           
+          # Ensure target directory exists on the remote server
+          ssh $SERVER_USER@$SERVER_HOST "mkdir -p $TARGET_DIR"
+          
           # Synchronize build assets to server target folder using rsync
           rsync -ravz --delete dist/ $SERVER_USER@$SERVER_HOST:$TARGET_DIR
+          
+          # Fix ownership and permissions for Nginx to read the deployed files
+          ssh $SERVER_USER@$SERVER_HOST "chown -R www-data:www-data $TARGET_DIR && find $TARGET_DIR -type d -exec chmod 755 {} \; && find $TARGET_DIR -type f -exec chmod 644 {} \;"
