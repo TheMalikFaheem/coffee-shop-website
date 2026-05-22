@@ -53,7 +53,7 @@ function AppContent() {
       return (
         <>
           {/* Main Hero Slider visual wrapper */}
-          <div className="w-full relative bg-[#021A1A]">
+          <div className="w-full relative bg-[#F6F1EA]">
             {activeProduct && <HeroSection activeProduct={activeProduct} />}
             {heroProducts.length > 0 && activeProduct && (
               <ProductPreviewSlider

@@ -41,14 +41,18 @@ export default function HeroSection({ activeProduct }) {
             
             {/* Origin & Roast pills */}
             <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="flex items-center gap-1.5 px-3.5 py-1.5 bg-brand-beige border border-brand-primary/20 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider text-brand-primary shadow-warm-sm">
-                <Compass size={11} />
-                {activeProduct.origin}
-              </span>
-              <span className="flex items-center gap-1.5 px-3.5 py-1.5 bg-brand-beige border border-brand-primary/15 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider text-brand-muted">
-                <Flame size={11} />
-                {activeProduct.roast}
-              </span>
+              {activeProduct.origin && (
+                <span className="flex items-center gap-1.5 px-3.5 py-1.5 bg-brand-beige border border-brand-primary/20 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider text-brand-primary shadow-warm-sm">
+                  <Compass size={11} />
+                  {activeProduct.origin}
+                </span>
+              )}
+              {activeProduct.roast && (
+                <span className="flex items-center gap-1.5 px-3.5 py-1.5 bg-brand-beige border border-brand-primary/15 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider text-brand-muted">
+                  <Flame size={11} />
+                  {activeProduct.roast}
+                </span>
+              )}
             </div>
 
             {/* Title block */}

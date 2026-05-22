@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 export default function ProductPreviewSlider({ products, activeProduct, onSelectProduct }) {
   return (
     <div className="max-w-7xl mx-auto w-full px-4 md:px-8 flex justify-start -mt-20 md:-mt-28 mb-16 relative z-20">
-      <div className="flex gap-4 items-center bg-[#022121]/80 backdrop-blur-md px-5 py-3 rounded-3xl border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
+      <div className="flex gap-4 items-center bg-brand-cream/80 backdrop-blur-md px-5 py-3 rounded-3xl border border-brand-primary/10 shadow-warm-md">
         {products.map((product) => {
           const isActive = activeProduct.id === product.id;
           return (
@@ -22,13 +22,13 @@ export default function ProductPreviewSlider({ products, activeProduct, onSelect
               <div
                 className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 ${
                   isActive 
-                    ? 'bg-white p-0.5 shadow-[0_0_20px_rgba(255,255,255,0.4)] scale-110' 
-                    : 'bg-white/5 hover:bg-white/15 p-0.5'
+                    ? 'bg-brand-primary p-0.5 shadow-warm-sm scale-110' 
+                    : 'bg-brand-primary/10 hover:bg-brand-primary/20 p-0.5'
                 }`}
               >
                 <div 
                   className={`w-full h-full rounded-full flex items-center justify-center overflow-hidden transition-colors duration-500 ${
-                    isActive ? 'bg-[#008248]' : 'bg-[#032B2B]'
+                    isActive ? 'bg-brand-cream' : 'bg-brand-cream/50'
                   }`}
                 >
                   <img
@@ -48,7 +48,7 @@ export default function ProductPreviewSlider({ products, activeProduct, onSelect
               {isActive && (
                 <motion.div
                   layoutId="sliderDot"
-                  className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-brand-accent rounded-full"
+                  className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-brand-primary rounded-full"
                   transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                 />
               )}

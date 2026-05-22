@@ -72,7 +72,10 @@ export default function PopularSection() {
                 <div className="mt-8 flex-1 flex flex-col justify-between space-y-5">
                   <div className="space-y-2">
                     <span className={`text-[10px] font-bold font-montserrat uppercase tracking-wider block ${isFeatured ? 'text-brand-latte/80' : 'text-brand-caramel'}`}>
-                      {item.origin.split(' ')[0]} / {item.roast.split(' ')[0]}
+                      {(item.origin || item.roast) 
+                        ? [item.origin?.split(' ')[0], item.roast?.split(' ')[0]].filter(Boolean).join(' / ')
+                        : item.category
+                      }
                     </span>
                     <h3 className="font-playfair font-bold text-xl leading-tight">
                       {item.name}

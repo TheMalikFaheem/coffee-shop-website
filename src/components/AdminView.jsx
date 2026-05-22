@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Database, Plus, Trash2, Edit, Save, X, Calendar, User, FileText, CheckCircle, Info } from 'lucide-react';
-import { getMenuItems, saveMenuItem, deleteMenuItem, getBlogPosts, saveBlogPost, deleteBlogPost } from '../data/coffeeDb';
+import { Database, Plus, Trash2, Edit, Save, X, LogOut } from 'lucide-react';
+import { getMenuItems, saveMenuItem, deleteMenuItem, getBlogPosts, saveBlogPost, deleteBlogPost, isAdminAuthenticated, adminLogout, resetToDefaults } from '../data/coffeeDb';
+import AdminLogin from './AdminLogin';
 
 export default function AdminView() {
+  const [authed, setAuthed] = useState(isAdminAuthenticated());
+
+  if (!authed) {
+    return <AdminLogin onSuccess={() => setAuthed(true)} />;
+  }
+
+  return <AdminDashboard onLogout={() => { adminLogout(); setAuthed(false); }} />;
+}
+
+function AdminDashboard({ onLogout }) {
   const [activeTab, setActiveTab] = useState('menu');
   const [menuItems, setMenuItems] = useState([]);
   const [blogPosts, setBlogPosts] = useState([]);
@@ -15,8 +26,8 @@ export default function AdminView() {
   const [menuSlug, setMenuSlug] = useState('');
   const [menuSubtitle, setMenuSubtitle] = useState('');
   const [menuDescription, setMenuDescription] = useState('');
-  const [menuPrice, setMenuPrice] = useState('$8.50');
-  const [menuCategory, setMenuCategory] = useState('Hot Coffees');
+  const [menuPrice, setMenuPrice] = useState('Rs 690');
+  const [menuCategory, setMenuCategory] = useState('Hot Coffee');
   const [menuOrigin, setMenuOrigin] = useState('');
   const [menuRoast, setMenuRoast] = useState('Medium Roast');
   const [menuStrength, setMenuStrength] = useState(3);
@@ -290,44 +301,54 @@ export default function AdminView() {
   };
 
   return (
-    <div className="min-h-screen bg-[#032B2B] text-white pt-32 pb-24 px-4 select-none relative overflow-hidden">
-      {/* Background radial overlays */}
-      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-brand-primary/5 rounded-full blur-[140px] pointer-events-none" />
+    <div className="min-h-screen bg-brand-espresso text-brand-cream pt-28 pb-24 px-4 select-none relative overflow-hidden">
+      {/* Ambient overlays */}
+      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-brand-caramel/8 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-brand-primary/8 rounded-full blur-[140px] pointer-events-none" />
       
       <div className="max-w-5xl mx-auto w-full relative z-10 text-left">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 border-b border-white/10 pb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 border-b border-brand-cream/10 pb-8">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-brand-accent">
+            <div className="flex items-center gap-2 text-brand-caramel">
               <Database size={18} className="animate-pulse" />
-              <span className="text-xs font-bold tracking-widest uppercase font-montserrat">CMS Console</span>
+              <span className="text-xs font-bold tracking-widest uppercase font-montserrat">N² CMS Dashboard</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-extrabold font-montserrat uppercase tracking-wider">
-              Console Dashboard
+            <h1 className="text-3xl md:text-4xl font-playfair font-bold text-brand-cream">
+              Admin Console
             </h1>
-            <p className="text-brand-textMuted text-xs font-poppins">
-              Manage website catalog data in local memory. Changes reflect immediately on product & blog templates.
+            <p className="text-brand-cream/45 text-xs font-poppins">
+              Manage menu catalog and journal posts. Changes reflect immediately on the live website.
             </p>
           </div>
 
-          {/* Console Tabs */}
-          <div className="flex bg-white/5 p-1 rounded-2xl border border-white/15 self-start shrink-0">
+          {/* Right side: tabs + logout */}
+          <div className="flex flex-col gap-3 self-start shrink-0">
+            <div className="flex bg-brand-cream/5 p-1 rounded-2xl border border-brand-cream/10">
+              <button
+                onClick={() => { setActiveTab('menu'); resetMenuForm(); resetBlogForm(); }}
+                className={`px-5 py-2 rounded-xl text-xs font-bold font-montserrat uppercase tracking-wider transition-all duration-300 ${
+                  activeTab === 'menu' ? 'bg-brand-primary text-brand-cream' : 'text-brand-cream/40 hover:text-brand-cream'
+                }`}
+              >
+                Menu Items
+              </button>
+              <button
+                onClick={() => { setActiveTab('blog'); resetMenuForm(); resetBlogForm(); }}
+                className={`px-5 py-2 rounded-xl text-xs font-bold font-montserrat uppercase tracking-wider transition-all duration-300 ${
+                  activeTab === 'blog' ? 'bg-brand-primary text-brand-cream' : 'text-brand-cream/40 hover:text-brand-cream'
+                }`}
+              >
+                Journal
+              </button>
+            </div>
             <button
-              onClick={() => { setActiveTab('menu'); resetMenuForm(); resetBlogForm(); }}
-              className={`px-5 py-2 rounded-xl text-xs font-bold font-montserrat uppercase tracking-wider transition-all duration-300 ${
-                activeTab === 'menu' ? 'bg-brand-primary text-white' : 'text-brand-textMuted hover:text-white'
-              }`}
+              onClick={onLogout}
+              className="flex items-center justify-center gap-1.5 px-4 py-2 bg-brand-cream/5 border border-brand-cream/15 rounded-xl text-xs font-bold font-montserrat uppercase tracking-wider text-brand-cream/50 hover:text-brand-cream hover:border-brand-cream/30 transition-all duration-300"
             >
-              Menu Items
-            </button>
-            <button
-              onClick={() => { setActiveTab('blog'); resetMenuForm(); resetBlogForm(); }}
-              className={`px-5 py-2 rounded-xl text-xs font-bold font-montserrat uppercase tracking-wider transition-all duration-300 ${
-                activeTab === 'blog' ? 'bg-brand-primary text-white' : 'text-brand-textMuted hover:text-white'
-              }`}
-            >
-              Journal Press
+              <LogOut size={13} />
+              Sign Out
             </button>
           </div>
         </div>
@@ -338,17 +359,25 @@ export default function AdminView() {
             {!showMenuForm ? (
               <div className="space-y-6">
                 {/* Controls */}
-                <div className="flex justify-between items-center bg-white/5 border border-white/10 rounded-2xl p-4">
-                  <span className="text-xs font-bold font-montserrat text-brand-textMuted uppercase tracking-wider">
-                    Catalog Items Count: {menuItems.length}
+                <div className="flex flex-wrap justify-between items-center bg-brand-cream/5 border border-brand-cream/10 rounded-2xl p-4 gap-3">
+                  <span className="text-xs font-bold font-montserrat text-brand-cream/45 uppercase tracking-wider">
+                    {menuItems.length} Items in Catalog
                   </span>
-                  <button
-                    onClick={() => { resetMenuForm(); setShowMenuForm(true); }}
-                    className="flex items-center gap-1.5 px-4 py-2 bg-brand-primary hover:bg-brand-accent rounded-full text-xs font-bold font-montserrat uppercase tracking-widest text-white transition-all duration-300 shadow-md"
-                  >
-                    <Plus size={14} />
-                    New Coffee Drink
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => { if(window.confirm('Reset all menu items to defaults?')) resetToDefaults(); }}
+                      className="flex items-center gap-1.5 px-4 py-2 bg-brand-cream/5 border border-brand-cream/15 rounded-full text-xs font-bold font-montserrat uppercase tracking-widest text-brand-cream/50 hover:text-brand-cream transition-all duration-300"
+                    >
+                      Reset Defaults
+                    </button>
+                    <button
+                      onClick={() => { resetMenuForm(); setShowMenuForm(true); }}
+                      className="flex items-center gap-1.5 px-4 py-2 bg-brand-primary hover:bg-brand-mocha rounded-full text-xs font-bold font-montserrat uppercase tracking-widest text-brand-cream transition-all duration-300 shadow-warm-sm"
+                    >
+                      <Plus size={14} />
+                      New Item
+                    </button>
+                  </div>
                 </div>
 
                 {/* Drinks list */}
@@ -356,23 +385,22 @@ export default function AdminView() {
                   {menuItems.map((item) => (
                     <div 
                       key={item.id}
-                      className="bg-white/5 border border-white/10 rounded-3xl p-5 flex items-center justify-between hover:border-brand-primary/20 transition-all duration-300"
+                      className="bg-brand-cream/5 border border-brand-cream/10 rounded-3xl p-5 flex items-center justify-between hover:border-brand-primary/40 transition-all duration-300"
                     >
                       <div className="flex items-center gap-4 min-w-0">
-                        <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center shrink-0">
+                        <div className="w-12 h-12 rounded-xl bg-brand-cream/8 border border-brand-cream/10 flex items-center justify-center shrink-0 overflow-hidden">
                           <img 
                             src="/coffee.png" 
                             alt={item.name} 
-                            className="w-10 h-10 object-contain" 
-                            style={{ filter: item.imgFilter }}
+                            className="w-10 h-10 object-cover rounded-lg"
                           />
                         </div>
                         <div className="min-w-0 text-left">
-                          <h3 className="font-montserrat font-bold text-white text-base leading-tight truncate">
+                          <h3 className="font-playfair font-bold text-brand-cream text-sm leading-tight truncate">
                             {item.name}
                           </h3>
-                          <span className="text-[10px] font-bold text-brand-accent font-montserrat uppercase tracking-wider block mt-0.5">
-                            {item.category} • {item.price}
+                          <span className="text-[10px] font-bold text-brand-caramel font-montserrat uppercase tracking-wider block mt-0.5">
+                            {item.category} · {item.price}
                           </span>
                         </div>
                       </div>
@@ -380,14 +408,14 @@ export default function AdminView() {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEditMenu(item)}
-                          className="p-2 bg-white/5 hover:bg-brand-primary border border-white/5 hover:border-brand-accent text-brand-textMuted hover:text-white rounded-lg transition-all duration-300"
+                          className="p-2 bg-brand-cream/5 hover:bg-brand-primary border border-brand-cream/10 hover:border-brand-primary text-brand-cream/40 hover:text-brand-cream rounded-lg transition-all duration-300"
                           title="Edit"
                         >
                           <Edit size={14} />
                         </button>
                         <button
                           onClick={() => handleDeleteMenu(item.slug, item.name)}
-                          className="p-2 bg-white/5 hover:bg-red-950 border border-white/5 hover:border-red-500 text-brand-textMuted hover:text-red-400 rounded-lg transition-all duration-300"
+                          className="p-2 bg-brand-cream/5 hover:bg-red-950/40 border border-brand-cream/10 hover:border-red-500/30 text-brand-cream/40 hover:text-red-400 rounded-lg transition-all duration-300"
                           title="Delete"
                         >
                           <Trash2 size={14} />
@@ -463,15 +491,21 @@ export default function AdminView() {
 
                   {/* Category */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-bold font-montserrat uppercase tracking-wider text-brand-textMuted block">Category</label>
+                    <label className="text-[10px] font-bold font-montserrat uppercase tracking-wider text-brand-cream/50 block">Category</label>
                     <select
                       value={menuCategory}
                       onChange={(e) => setMenuCategory(e.target.value)}
-                      className="w-full bg-[#021A1A] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-accent transition-colors"
+                      className="w-full bg-brand-espresso border border-brand-cream/15 rounded-xl px-4 py-2.5 text-sm text-brand-cream focus:outline-none focus:border-brand-caramel transition-colors"
                     >
-                      <option value="Hot Coffees">Hot Coffees</option>
-                      <option value="Cold Drinks">Cold Drinks</option>
-                      <option value="Specials">Specials</option>
+                      <option value="Hot Coffee">Hot Coffee</option>
+                      <option value="Smoothies">Smoothies</option>
+                      <option value="Iced Tea">Iced Tea</option>
+                      <option value="Mocktails">Mocktails</option>
+                      <option value="Iced Coffee">Iced Coffee</option>
+                      <option value="Matcha">Matcha</option>
+                      <option value="Desserts">Desserts</option>
+                      <option value="Bakery Items">Bakery Items</option>
+                      <option value="Sandwiches">Sandwiches</option>
                     </select>
                   </div>
 

@@ -63,10 +63,10 @@ export default function Navbar() {
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-playfair font-bold text-brand-dark text-base tracking-wide group-hover:text-brand-primary transition-colors duration-300">
-              Verdant
+              N Squared
             </span>
             <span className="text-[8px] font-montserrat font-bold tracking-[0.2em] text-brand-muted uppercase">
-              Coffee Co.
+              N²
             </span>
           </div>
         </Link>
@@ -99,21 +99,8 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Right: CMS Link + Mobile Burger */}
-        <div className="flex items-center gap-2">
-          <Link
-            href="/admin"
-            id="cms-admin-link"
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider transition-all duration-300 border ${
-              path === '/admin'
-                ? 'bg-brand-primary border-brand-primary text-brand-cream shadow-warm-sm'
-                : 'bg-brand-primary/8 border-brand-primary/25 text-brand-primary hover:bg-brand-primary hover:text-brand-cream'
-            }`}
-            title="CMS Console"
-          >
-            <Database size={13} />
-            <span className="hidden sm:inline">Admin</span>
-          </Link>
+        {/* Right: Mobile Burger */}
+        <div className="flex items-center">
 
           {/* Mobile hamburger */}
           <button
@@ -155,18 +142,6 @@ export default function Navbar() {
               );
             })}
             <div className="w-full h-px bg-brand-primary/12 my-1" />
-            <Link
-              href="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className={`py-3 px-4 rounded-2xl text-base font-semibold font-poppins transition-all duration-300 flex items-center gap-3 ${
-                path === '/admin'
-                  ? 'bg-brand-primary text-brand-cream'
-                  : 'text-brand-muted hover:bg-brand-primary/8 hover:text-brand-dark'
-              }`}
-            >
-              <Database size={18} />
-              CMS Console
-            </Link>
           </motion.div>
         )}
       </AnimatePresence>

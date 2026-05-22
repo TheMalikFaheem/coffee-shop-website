@@ -76,14 +76,18 @@ export default function MenuDetailView({ slug }) {
             </div>
 
             <div className="flex flex-wrap gap-2.5">
-              <span className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-beige border border-brand-primary/20 rounded-full text-xs font-bold font-montserrat text-brand-primary uppercase tracking-wider">
-                <Compass size={11} />
-                {item.origin}
-              </span>
-              <span className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-beige border border-brand-primary/12 rounded-full text-xs font-bold font-montserrat text-brand-muted uppercase tracking-wider">
-                <Flame size={11} />
-                {item.roast}
-              </span>
+              {item.origin && (
+                <span className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-beige border border-brand-primary/20 rounded-full text-xs font-bold font-montserrat text-brand-primary uppercase tracking-wider">
+                  <Compass size={11} />
+                  {item.origin}
+                </span>
+              )}
+              {item.roast && (
+                <span className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-beige border border-brand-primary/12 rounded-full text-xs font-bold font-montserrat text-brand-muted uppercase tracking-wider">
+                  <Flame size={11} />
+                  {item.roast}
+                </span>
+              )}
             </div>
 
             <p className="text-brand-muted text-sm font-poppins leading-relaxed">
@@ -312,9 +316,11 @@ export default function MenuDetailView({ slug }) {
                 <h4 className="font-playfair font-bold text-sm text-brand-dark line-clamp-1">
                   {item.name}
                 </h4>
-                <p className="text-[9px] font-poppins font-medium text-brand-muted uppercase tracking-wider">
-                  {item.origin.split(' ')[0]} / {item.roast.split(' ')[0]}
-                </p>
+                {(item.origin || item.roast) && (
+                  <p className="text-[9px] font-poppins font-medium text-brand-muted uppercase tracking-wider">
+                    {[item.origin?.split(' ')[0], item.roast?.split(' ')[0]].filter(Boolean).join(' / ')}
+                  </p>
+                )}
               </div>
             </div>
 

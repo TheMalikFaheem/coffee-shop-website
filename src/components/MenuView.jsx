@@ -95,14 +95,18 @@ export default function MenuView() {
 
                     {/* Spec overlay */}
                     <div className="absolute bottom-3 left-3 right-3 flex justify-between text-[9px] font-bold font-montserrat uppercase tracking-wider text-brand-muted">
-                      <span className="flex items-center gap-1">
-                        <Compass size={9} />
-                        {item.origin.split(' ')[0]}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Flame size={9} />
-                        {item.roast.split(' ')[0]}
-                      </span>
+                      {item.origin ? (
+                        <span className="flex items-center gap-1">
+                          <Compass size={9} />
+                          {item.origin.split(' ')[0]}
+                        </span>
+                      ) : <span />}
+                      {item.roast ? (
+                        <span className="flex items-center gap-1">
+                          <Flame size={9} />
+                          {item.roast.split(' ')[0]}
+                        </span>
+                      ) : <span />}
                     </div>
                   </div>
 
