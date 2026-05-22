@@ -106,17 +106,18 @@ function AppContent() {
 
     // 404 Route Not Found fallback block
     return (
-      <div className="min-h-screen bg-[#032B2B] flex flex-col items-center justify-center py-20 text-center select-none">
-        <div className="space-y-4 max-w-sm px-4">
-          <h2 className="text-3xl font-black font-montserrat text-white uppercase tracking-wider">404 - NOT FOUND</h2>
-          <p className="text-brand-textMuted text-xs font-poppins">
-            The premium catalog route you requested is unavailable or has been changed.
+      <div className="min-h-screen bg-cream-gradient flex flex-col items-center justify-center py-20 text-center select-none">
+        <div className="space-y-5 max-w-sm px-4">
+          <p className="text-xs font-bold font-montserrat tracking-[0.25em] text-brand-caramel uppercase">404 — Page Not Found</p>
+          <h2 className="text-4xl font-playfair font-bold text-brand-dark">Lost in the Blend?</h2>
+          <p className="text-brand-muted text-sm font-poppins leading-relaxed">
+            The page you're looking for doesn't exist or has been moved.
           </p>
           <Link
             href="/"
-            className="inline-block mt-4 px-6 py-2.5 bg-brand-primary text-white text-xs font-bold font-montserrat tracking-widest rounded-full uppercase"
+            className="inline-block mt-4 px-7 py-3 bg-brand-primary hover:bg-brand-mocha text-brand-cream text-xs font-bold font-montserrat tracking-widest rounded-full uppercase shadow-warm-sm transition-colors duration-300"
           >
-            Go Back Home
+            Return Home
           </Link>
         </div>
       </div>
@@ -124,7 +125,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-dark text-white selection:bg-brand-primary selection:text-white font-poppins relative overflow-x-hidden">
+    <div className="min-h-screen bg-brand-cream text-brand-dark selection:bg-brand-primary selection:text-brand-cream font-poppins relative overflow-x-hidden">
       
       {/* Global Header */}
       <Navbar />

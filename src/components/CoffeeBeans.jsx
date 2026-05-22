@@ -27,21 +27,23 @@ export const CoffeeBeanSVG = ({ className = "w-8 h-8", style = {} }) => (
 
 /**
  * Generates float-animated decorative background beans.
+ * lightMode=true  → soft warm brown tones (cream backgrounds)
+ * lightMode=false → original dark bean tones (dark backgrounds)
  */
-export default function CoffeeBeans({ count = 5 }) {
+export default function CoffeeBeans({ count = 5, lightMode = true }) {
   // Generate random drift metrics for each bean
   const beans = useMemo(() => {
     return Array.from({ length: count }).map((_, i) => ({
       id: i,
-      x: Math.random() * 90 + 5, // Keep slightly inside bounds
+      x: Math.random() * 90 + 5,
       y: Math.random() * 90 + 5,
-      size: Math.random() * 20 + 16, // 16px to 36px
+      size: Math.random() * 22 + 14,
       rotation: Math.random() * 360,
-      duration: Math.random() * 10 + 10, // Slow float (10s to 20s)
-      delay: Math.random() * -10, // Pre-start animation
+      duration: Math.random() * 12 + 10,
+      delay: Math.random() * -10,
       driftX: Math.random() * 30 - 15,
       driftY: Math.random() * 30 - 15,
-      rotateDrift: Math.random() * 120 - 60 // Rotate -60deg to +60deg relative to base
+      rotateDrift: Math.random() * 120 - 60,
     }));
   }, [count]);
 
@@ -50,10 +52,12 @@ export default function CoffeeBeans({ count = 5 }) {
       {beans.map((bean) => (
         <motion.div
           key={bean.id}
-          className="absolute opacity-25 filter blur-[0.4px]"
+          className="absolute filter blur-[0.4px]"
           style={{
             left: `${bean.x}%`,
             top: `${bean.y}%`,
+            opacity: lightMode ? 0.12 : 0.25,
+            filter: lightMode ? 'sepia(0.6) saturate(1.2) brightness(0.75)' : 'none',
           }}
           animate={{
             x: [0, bean.driftX, 0],
@@ -64,7 +68,7 @@ export default function CoffeeBeans({ count = 5 }) {
             duration: bean.duration,
             delay: bean.delay,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: 'easeInOut',
           }}
         >
           <CoffeeBeanSVG style={{ width: `${bean.size}px`, height: `${bean.size}px` }} />
@@ -73,3 +77,4 @@ export default function CoffeeBeans({ count = 5 }) {
     </div>
   );
 }
+

@@ -23,7 +23,6 @@ export default function ContactSection() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      // Simulate form submission
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
@@ -34,17 +33,17 @@ export default function ContactSection() {
   };
 
   return (
-    <section className="relative py-20 bg-brand-dark px-4 md:px-8 select-none w-full" id="contact-section">
-      {/* Decorative Blur BG */}
-      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand-accent/5 rounded-full blur-[100px] pointer-events-none" />
+    <section className="relative py-20 bg-brand-beige px-4 md:px-8 select-none w-full" id="contact-section">
+      
+      {/* Ambient blur */}
+      <div className="absolute top-1/2 left-1/4 w-[350px] h-[350px] bg-brand-caramel/10 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* Grid Container */}
-      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch w-full">
-        
-        {/* LEFT SIDE: Contact Form Card */}
-        <div className="glass-card rounded-[35px] p-8 border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.25)] flex flex-col justify-between min-h-[320px]">
-          <h2 className="font-montserrat font-black text-2xl tracking-widest text-left text-white mb-6 uppercase">
-            CONTACT
+      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch w-full relative z-10">
+
+        {/* LEFT: Contact Form Card */}
+        <div className="bg-white/75 backdrop-blur-md rounded-[35px] p-8 border border-brand-primary/15 shadow-warm-md flex flex-col justify-between min-h-[340px]">
+          <h2 className="font-playfair font-bold text-2xl text-brand-dark text-left mb-6">
+            Get in Touch
           </h2>
 
           <AnimatePresence mode="wait">
@@ -58,47 +57,47 @@ export default function ContactSection() {
                 className="space-y-5 flex-1 flex flex-col justify-between"
               >
                 <div className="space-y-4">
-                  {/* Name field */}
+                  {/* Name */}
                   <div className="text-left">
-                    <label htmlFor="name-input" className="text-[10px] font-bold font-montserrat uppercase tracking-wider text-brand-textMuted block mb-1.5">
+                    <label htmlFor="name-input" className="text-[10px] font-bold font-montserrat uppercase tracking-wider text-brand-muted block mb-1.5">
                       Name
                     </label>
                     <input
                       id="name-input"
                       type="text"
-                      placeholder="ENTER YOUR NAME..."
+                      placeholder="Your name..."
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-sm font-semibold tracking-wide text-white focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-bold ${
-                        errors.name 
-                          ? 'border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
-                          : 'border-white/10 focus:border-brand-accent focus:ring-1 focus:ring-brand-accent/50'
+                      className={`w-full bg-brand-beige border rounded-xl px-4 py-3 text-sm font-poppins text-brand-dark focus:outline-none transition-all duration-300 placeholder:text-brand-muted/50 ${
+                        errors.name
+                          ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-300'
+                          : 'border-brand-primary/20 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/25'
                       }`}
                     />
                     {errors.name && (
-                      <span className="text-[10px] font-bold text-red-400 mt-1 block">{errors.name}</span>
+                      <span className="text-[10px] font-bold text-red-500 mt-1 block">{errors.name}</span>
                     )}
                   </div>
 
-                  {/* Email field */}
+                  {/* Email */}
                   <div className="text-left">
-                    <label htmlFor="email-input" className="text-[10px] font-bold font-montserrat uppercase tracking-wider text-brand-textMuted block mb-1.5">
+                    <label htmlFor="email-input" className="text-[10px] font-bold font-montserrat uppercase tracking-wider text-brand-muted block mb-1.5">
                       Email
                     </label>
                     <input
                       id="email-input"
                       type="email"
-                      placeholder="ENTER YOUR EMAIL..."
+                      placeholder="your@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className={`w-full bg-white/5 border rounded-xl px-4 py-3 text-sm font-semibold tracking-wide text-white focus:outline-none transition-all duration-300 placeholder:text-white/20 placeholder:font-bold ${
-                        errors.email 
-                          ? 'border-red-500/50 focus:border-red-500 focus:ring-1 focus:ring-red-500' 
-                          : 'border-white/10 focus:border-brand-accent focus:ring-1 focus:ring-brand-accent/50'
+                      className={`w-full bg-brand-beige border rounded-xl px-4 py-3 text-sm font-poppins text-brand-dark focus:outline-none transition-all duration-300 placeholder:text-brand-muted/50 ${
+                        errors.email
+                          ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-300'
+                          : 'border-brand-primary/20 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/25'
                       }`}
                     />
                     {errors.email && (
-                      <span className="text-[10px] font-bold text-red-400 mt-1 block">{errors.email}</span>
+                      <span className="text-[10px] font-bold text-red-500 mt-1 block">{errors.email}</span>
                     )}
                   </div>
                 </div>
@@ -108,9 +107,9 @@ export default function ContactSection() {
                     type="submit"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-3.5 rounded-full bg-brand-primary hover:bg-brand-accent text-white text-xs font-bold font-montserrat tracking-widest shadow-md transition-colors duration-300"
+                    className="w-full py-3.5 rounded-full bg-brand-primary hover:bg-brand-mocha text-brand-cream text-xs font-bold font-montserrat tracking-widest shadow-warm-sm transition-colors duration-300"
                   >
-                    SUBMIT
+                    SEND MESSAGE
                   </motion.button>
                 </div>
               </motion.form>
@@ -122,47 +121,45 @@ export default function ContactSection() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="flex-1 flex flex-col items-center justify-center text-center space-y-3 py-8"
               >
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                >
-                  <CheckCircle2 size={48} className="text-brand-accent stroke-[2.5]" />
+                <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 2 }}>
+                  <CheckCircle2 size={48} className="text-brand-primary stroke-[2]" />
                 </motion.div>
-                <h3 className="font-montserrat font-black text-lg text-white uppercase tracking-wider">
-                  MESSAGE SENT!
-                </h3>
-                <p className="text-xs font-poppins text-brand-textMuted max-w-xs leading-relaxed">
-                  Thank you for reaching out to us. Our support barista team will get back to you shortly.
+                <h3 className="font-playfair font-bold text-xl text-brand-dark">Message Sent!</h3>
+                <p className="text-xs font-poppins text-brand-muted max-w-xs leading-relaxed">
+                  Thank you for reaching out. Our team will get back to you shortly.
                 </p>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* RIGHT SIDE: Green CTA Box */}
-        <div className="bg-brand-primary rounded-[35px] p-8 border border-brand-accent/20 shadow-[0_15px_40px_rgba(0,130,72,0.2)] flex flex-col justify-between text-left relative overflow-hidden min-h-[320px]">
-          {/* Abstract leaf shape decoration in background */}
-          <div className="absolute -top-16 -right-16 w-48 h-48 bg-brand-accent/20 rounded-full blur-[40px] pointer-events-none" />
-          
-          <div className="space-y-4 pt-4">
-            <h3 className="font-montserrat font-black text-4xl lg:text-5xl text-white tracking-wide uppercase leading-none">
-              THANK YOU!
+        {/* RIGHT: CTA Box */}
+        <div className="bg-brand-primary rounded-[35px] p-8 shadow-warm-lg flex flex-col justify-between text-left relative overflow-hidden min-h-[340px]">
+          {/* Decorative blob */}
+          <div className="absolute -top-16 -right-16 w-52 h-52 bg-brand-caramel/25 rounded-full blur-[50px] pointer-events-none" />
+          <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-brand-mocha/40 rounded-full blur-[40px] pointer-events-none" />
+
+          <div className="space-y-5 pt-2 relative z-10">
+            <span className="text-[10px] font-bold font-montserrat uppercase tracking-[0.25em] text-brand-latte/70 block">
+              Verdant Coffee Co.
+            </span>
+            <h3 className="font-playfair font-bold text-4xl lg:text-5xl text-brand-cream leading-none">
+              Let's Brew Something Together
             </h3>
-            <p className="text-brand-light font-poppins text-sm md:text-base leading-relaxed max-w-sm">
-              Hang tight! We’re coming your way soon with freshly brewed stories and coffee designs.
+            <p className="text-brand-latte/80 font-poppins text-sm md:text-base leading-relaxed max-w-sm">
+              Whether it's a brand event, wholesale sourcing, or a private tasting — we'd love to connect over a cup.
             </p>
           </div>
 
-          <div className="flex justify-end pt-6">
-            <motion.button
-              whileHover={{ scale: 1.1, rotate: 90 }}
+          <div className="flex justify-end pt-6 relative z-10">
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 45 }}
               whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
-              className="w-16 h-16 rounded-full bg-white text-brand-primary flex items-center justify-center shadow-lg cursor-pointer hover:bg-brand-dark hover:text-white transition-colors duration-300"
-              aria-label="Thank You CTA"
+              transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+              className="w-14 h-14 rounded-full bg-brand-cream text-brand-primary flex items-center justify-center shadow-warm-sm cursor-pointer hover:bg-brand-latte transition-colors duration-300"
             >
-              <ArrowRight size={28} className="stroke-[2.5]" />
-            </motion.button>
+              <ArrowRight size={24} />
+            </motion.div>
           </div>
         </div>
 

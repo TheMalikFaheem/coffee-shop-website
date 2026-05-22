@@ -1,82 +1,85 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bean, Compass, Award, Flame, ChevronRight } from 'lucide-react';
+import { Bean, Compass, Flame, ChevronRight } from 'lucide-react';
 import CoffeeCup from './CoffeeCup';
 import CoffeeBeans from './CoffeeBeans';
 import { Link } from './Router';
 
 export default function HeroSection({ activeProduct }) {
-  // Render strength indicator using coffee bean icons
-  const renderStrength = (strength) => {
-    return (
-      <div className="flex gap-1.5 items-center">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Bean
-            key={i}
-            size={14}
-            className={`transition-all duration-500 ${
-              i < strength
-                ? 'text-brand-accent fill-brand-accent drop-shadow-[0_0_4px_rgba(0,168,98,0.6)] scale-110'
-                : 'text-white/20'
-            }`}
-          />
-        ))}
-      </div>
-    );
-  };
+
+  const renderStrength = (strength) => (
+    <div className="flex gap-1.5 items-center">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Bean
+          key={i}
+          size={14}
+          className={`transition-all duration-500 ${
+            i < strength
+              ? 'text-brand-primary fill-brand-primary drop-shadow-sm scale-110'
+              : 'text-brand-primary/20'
+          }`}
+        />
+      ))}
+    </div>
+  );
 
   return (
-    <section className="w-full min-h-screen pt-32 pb-16 flex items-center justify-center overflow-hidden bg-transparent relative select-none">
-      {/* Background Floating Beans */}
-      <CoffeeBeans count={8} />
+    <section className="w-full min-h-screen pt-36 pb-20 flex items-center justify-center overflow-hidden relative select-none bg-cream-gradient">
+      
+      {/* Ambient cream blur orbs */}
+      <div className="absolute top-1/4 left-1/5 w-[500px] h-[500px] bg-brand-caramel/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/5 w-[400px] h-[400px] bg-brand-primary/8 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* Hero Content Container */}
+      {/* Floating decorative coffee beans */}
+      <CoffeeBeans count={7} lightMode={true} />
+
       <div className="max-w-7xl mx-auto w-full px-4 md:px-8 z-10">
-        
-        {/* 3-Column Grid for Desktop (Left: Text copy, Center: Floating cup, Right: Specifications) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center w-full">
-          
-          {/* COLUMN 1: Editorial Description & Info (5 columns) */}
-          <div className="lg:col-span-5 flex flex-col justify-center text-left space-y-6 order-2 lg:order-1">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-6 items-center w-full">
+
+          {/* COLUMN 1: Editorial Copy */}
+          <div className="lg:col-span-5 flex flex-col justify-center text-left space-y-7 order-2 lg:order-1">
             
-            {/* Origin & Roast tag */}
-            <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider text-brand-accent">
-                <Compass size={12} />
+            {/* Origin & Roast pills */}
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="flex items-center gap-1.5 px-3.5 py-1.5 bg-brand-beige border border-brand-primary/20 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider text-brand-primary shadow-warm-sm">
+                <Compass size={11} />
                 {activeProduct.origin}
               </span>
-              <span className="flex items-center gap-1.5 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider text-brand-textMuted">
-                <Flame size={12} />
+              <span className="flex items-center gap-1.5 px-3.5 py-1.5 bg-brand-beige border border-brand-primary/15 rounded-full text-xs font-bold font-montserrat uppercase tracking-wider text-brand-muted">
+                <Flame size={11} />
                 {activeProduct.roast}
               </span>
             </div>
 
-            {/* Product Title */}
-            <div className="space-y-2">
-              <p className="text-xs md:text-sm font-bold tracking-[0.25em] text-brand-primary uppercase font-montserrat">
+            {/* Title block */}
+            <div className="space-y-3">
+              <p className="text-xs font-bold tracking-[0.3em] text-brand-caramel uppercase font-montserrat">
                 {activeProduct.subtitle}
               </p>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight font-montserrat text-white leading-none">
-                {activeProduct.name.split(' ').slice(0, -1).join(' ')} <span className="text-brand-accent">{activeProduct.name.split(' ').pop()}</span>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-playfair font-bold text-brand-dark leading-[0.95] tracking-tight">
+                {activeProduct.name.split(' ').slice(0, -1).join(' ')}
+                <span className="block text-brand-primary italic">
+                  {activeProduct.name.split(' ').pop()}
+                </span>
               </h1>
-              <div className="w-20 h-1 bg-brand-primary/60 rounded-full mt-4" />
+              <div className="w-16 h-0.5 bg-brand-caramel/50 rounded-full mt-3" />
             </div>
 
-            {/* Product Description */}
-            <p className="text-brand-textMuted text-sm md:text-base font-poppins leading-relaxed max-w-md">
+            {/* Description */}
+            <p className="text-brand-muted text-sm md:text-base font-poppins leading-relaxed max-w-md">
               {activeProduct.description}
             </p>
 
-            {/* Flavor Notes Grid */}
-            <div className="space-y-2">
-              <span className="text-xs font-bold tracking-widest text-brand-accent/80 font-montserrat uppercase block">
+            {/* Flavor notes */}
+            <div className="space-y-2.5">
+              <span className="text-[10px] font-bold tracking-[0.25em] text-brand-caramel/80 font-montserrat uppercase block">
                 Flavor Profiles
               </span>
               <div className="flex flex-wrap gap-2">
-                {activeProduct.flavorNotes?.map((note, index) => (
+                {activeProduct.flavorNotes?.map((note, i) => (
                   <span
-                    key={index}
-                    className="text-xs px-3 py-1 rounded-lg bg-brand-primary/10 border border-brand-primary/20 text-brand-light font-poppins font-medium"
+                    key={i}
+                    className="text-xs px-3.5 py-1.5 rounded-full bg-brand-primary/8 border border-brand-primary/20 text-brand-primary font-poppins font-medium"
                   >
                     {note}
                   </span>
@@ -84,67 +87,65 @@ export default function HeroSection({ activeProduct }) {
               </div>
             </div>
 
-            {/* Premium CTA Button */}
-            <div className="pt-2">
+            {/* CTA */}
+            <div className="pt-1">
               <Link
                 href={`/menu/${activeProduct.slug}`}
-                className="glow-btn inline-flex items-center gap-2 bg-white hover:bg-brand-light text-brand-dark px-8 py-3.5 rounded-full font-bold font-montserrat text-xs tracking-widest shadow-[0_10px_25px_rgba(0,0,0,0.3)] transition-all duration-300 group"
+                id="hero-explore-cta"
+                className="glow-btn inline-flex items-center gap-2.5 bg-brand-primary hover:bg-brand-mocha text-brand-cream px-8 py-4 rounded-full font-bold font-montserrat text-xs tracking-widest shadow-warm-md transition-all duration-300 group"
               >
-                DISCOVER RECIPE & DETAILS
-                <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform duration-300 text-brand-primary" />
+                EXPLORE RECIPE
+                <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
           </div>
 
-          {/* COLUMN 2: Central Floating Coffee Cup Visual (4 columns) */}
-          <div className="lg:col-span-4 relative flex items-center justify-center min-h-[300px] md:min-h-[400px] order-1 lg:order-2">
+          {/* COLUMN 2: Floating Coffee Cup */}
+          <div className="lg:col-span-4 relative flex items-center justify-center min-h-[340px] md:min-h-[460px] order-1 lg:order-2">
             
-            {/* Big Colored Background Shape with gradient */}
+            {/* Soft glowing background oval */}
             <motion.div
-              key={`shape-${activeProduct.id}`}
-              initial={{ opacity: 0, scale: 0.8, rotate: -15 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ type: "spring", stiffness: 100, damping: 15 }}
-              className={`absolute w-[240px] h-[320px] md:w-[280px] md:h-[380px] ${activeProduct.shapeBg} rounded-[50px] shadow-[0_25px_60px_rgba(0,0,0,0.5)] z-0 flex items-center justify-center overflow-hidden`}
+              key={`bg-${activeProduct.id}`}
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
+              className="absolute w-[260px] h-[340px] md:w-[300px] md:h-[400px] bg-gradient-to-b from-brand-beige to-brand-latte rounded-[60px] shadow-warm-xl z-0"
             >
-              {/* Internal glow radial gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-white/10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-caramel/20 via-transparent to-brand-cream/30 rounded-[60px]" />
             </motion.div>
 
-            {/* Large outline banner watermark behind the cup */}
-            <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none select-none z-0 overflow-hidden">
+            {/* Watermark text */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0 overflow-hidden">
               <AnimatePresence mode="wait">
-                <motion.div
-                  key={`giant-${activeProduct.id}`}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -30 }}
+                <motion.span
+                  key={`mark-${activeProduct.id}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="flex flex-col items-center leading-none"
+                  className="text-stroke-warm text-8xl md:text-9xl font-black font-playfair tracking-widest uppercase opacity-20 rotate-90 translate-x-24"
                 >
-                  <span className="text-stroke text-7xl md:text-8xl font-black font-montserrat tracking-widest uppercase opacity-15 rotate-90 translate-x-20 md:translate-x-24">
-                    {activeProduct.bannerText}
-                  </span>
-                </motion.div>
+                  {activeProduct.bannerText}
+                </motion.span>
               </AnimatePresence>
             </div>
 
-            {/* Interactive Floating Coffee Cup Wrapper */}
+            {/* Coffee cup */}
             <div className="relative z-10 w-full flex justify-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`cup-${activeProduct.id}`}
-                  initial={{ scale: 0.6, rotate: -35, opacity: 0 }}
+                  initial={{ scale: 0.65, rotate: -30, opacity: 0 }}
                   animate={{ scale: 1, rotate: activeProduct.rotation, opacity: 1 }}
-                  exit={{ scale: 0.6, rotate: 35, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 90, damping: 14 }}
+                  exit={{ scale: 0.65, rotate: 30, opacity: 0 }}
+                  transition={{ type: 'spring', stiffness: 90, damping: 14 }}
                 >
                   <CoffeeCup
-                    size="w-60 h-60 md:w-72 h-72 lg:w-80 lg:h-80"
+                    size="w-64 h-64 md:w-72 md:h-72 lg:w-80 lg:h-80"
                     rotation={activeProduct.rotation}
                     animateFloat={true}
-                    hoverScale={1.08}
+                    hoverScale={1.06}
                     shadow={true}
                     imgFilter={activeProduct.imgFilter}
                   />
@@ -152,72 +153,72 @@ export default function HeroSection({ activeProduct }) {
               </AnimatePresence>
             </div>
 
-            {/* Spotlight lighting filter effect behind the cup */}
-            <div className="absolute w-[300px] h-[300px] bg-brand-accent/20 rounded-full blur-[80px] pointer-events-none z-0" />
+            {/* Warm ambient glow */}
+            <div className="absolute w-[300px] h-[300px] bg-brand-caramel/15 rounded-full blur-[80px] pointer-events-none z-0" />
           </div>
 
-          {/* COLUMN 3: Technical Specifications Panel (3 columns) */}
-          <div className="lg:col-span-3 flex flex-col space-y-6 order-3 justify-center text-left bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md">
+          {/* COLUMN 3: Spec Sheet Panel */}
+          <div className="lg:col-span-3 flex flex-col space-y-5 order-3 justify-center bg-white/60 border border-brand-primary/12 rounded-3xl p-6 backdrop-blur-md shadow-warm-md">
             
-            {/* Header */}
             <div>
-              <span className="text-[10px] tracking-[0.2em] font-extrabold text-brand-accent font-montserrat uppercase block">
+              <span className="text-[9px] tracking-[0.22em] font-extrabold text-brand-caramel font-montserrat uppercase block">
                 Spec Sheet
               </span>
-              <h3 className="text-lg font-bold font-montserrat text-white uppercase tracking-wider">
+              <h3 className="text-base font-playfair font-bold text-brand-dark mt-0.5">
                 Blend Profile
               </h3>
-              <div className="w-10 h-0.5 bg-brand-primary mt-1" />
+              <div className="w-8 h-0.5 bg-brand-primary/40 mt-1.5" />
             </div>
 
-            {/* Strength indicator */}
-            <div className="space-y-1.5 border-b border-white/5 pb-4">
-              <span className="text-xs text-brand-textMuted font-poppins block">
+            {/* Strength */}
+            <div className="space-y-1.5 border-b border-brand-primary/8 pb-4">
+              <span className="text-[10px] text-brand-muted font-poppins block">
                 Caffeine / Roast Strength
               </span>
               {renderStrength(activeProduct.strength)}
             </div>
 
-            {/* Preparation style */}
-            <div className="space-y-1 border-b border-white/5 pb-4">
-              <span className="text-xs text-brand-textMuted font-poppins block">
+            {/* Serving */}
+            <div className="space-y-1 border-b border-brand-primary/8 pb-4">
+              <span className="text-[10px] text-brand-muted font-poppins block">
                 Serving Style
               </span>
-              <span className="text-sm font-bold text-white font-montserrat uppercase tracking-wider block">
+              <span className="text-sm font-bold text-brand-dark font-montserrat uppercase tracking-wide block">
                 {activeProduct.servingStyle}
               </span>
             </div>
 
-            {/* Key ingredients summary */}
-            <div className="space-y-2 border-b border-white/5 pb-4">
-              <span className="text-xs text-brand-textMuted font-poppins block">
+            {/* Key ingredients */}
+            <div className="space-y-2 border-b border-brand-primary/8 pb-4">
+              <span className="text-[10px] text-brand-muted font-poppins block">
                 Key Elements
               </span>
-              <ul className="text-xs space-y-1 text-white/90 font-poppins">
+              <ul className="text-xs space-y-1.5 text-brand-dark/85 font-poppins">
                 {activeProduct.ingredients?.slice(0, 3).map((ing, i) => (
                   <li key={i} className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-brand-accent rounded-full" />
-                    <span className="font-semibold">{ing.name}</span>
+                    <div className="w-1.5 h-1.5 bg-brand-caramel rounded-full shrink-0" />
+                    <span className="font-medium">{ing.name}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Nutritional Preview */}
+            {/* Quick facts */}
             <div className="space-y-1.5">
-              <span className="text-xs text-brand-textMuted font-poppins block">
+              <span className="text-[10px] text-brand-muted font-poppins block">
                 Quick Facts
               </span>
-              <div className="grid grid-cols-2 gap-2 text-[10px] font-bold font-montserrat text-white/70">
-                <div className="bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
-                  CAL: {activeProduct.nutrition?.calories}
+              <div className="grid grid-cols-2 gap-2 text-[10px] font-bold font-montserrat text-brand-muted">
+                <div className="bg-brand-beige px-2.5 py-2 rounded-xl border border-brand-primary/10 text-brand-dark">
+                  <div className="text-[8px] text-brand-muted mb-0.5">CAL</div>
+                  {activeProduct.nutrition?.calories}
                 </div>
-                <div className="bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
-                  CAFF: {activeProduct.nutrition?.caffeine}
+                <div className="bg-brand-beige px-2.5 py-2 rounded-xl border border-brand-primary/10 text-brand-dark">
+                  <div className="text-[8px] text-brand-muted mb-0.5">CAFF</div>
+                  {activeProduct.nutrition?.caffeine}
                 </div>
               </div>
             </div>
-            
           </div>
 
         </div>
