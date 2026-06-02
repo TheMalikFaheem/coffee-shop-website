@@ -62,8 +62,9 @@ function StatCounter({ value, label, delay = 0 }) {
 
   useEffect(() => {
     if (!inView) return;
-    const target = parseInt(value.replace(/\D/g, ''));
-    let start = 0;
+    const raw = value.replace(/[^\d.]/g, '');
+    const target = parseFloat(raw);
+    const isFloat = raw.includes('.');
     const duration = 1400;
     const startTime = performance.now();
     const tick = (now) => {
@@ -71,7 +72,7 @@ function StatCounter({ value, label, delay = 0 }) {
       if (elapsed < 0) { requestAnimationFrame(tick); return; }
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayed(Math.round(eased * target));
+      setDisplayed(isFloat ? (eased * target).toFixed(1) : Math.round(eased * target));
       if (progress < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);

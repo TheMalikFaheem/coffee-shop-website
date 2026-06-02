@@ -95,7 +95,7 @@ export default function BlogPreview() {
                   <img
                     src={featured.coverImage}
                     alt={featured.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-107"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     style={{ transition: 'transform 0.7s ease' }}
                     loading="lazy"
                   />
