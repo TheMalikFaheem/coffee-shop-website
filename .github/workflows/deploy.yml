@@ -25,61 +25,99 @@ jobs:
       - name: Build Project
         run: npm run build
 
-      - name: Deploy to Server via SSH
+      - name: Setup SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Open Firewall Ports on Server
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: root
+        run: |
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST bash << 'ENDSSH'
+            set -e
+
+            # Install ufw if missing
+            apt-get install -y ufw 2>/dev/null || true
+
+            # Always allow SSH first — never get locked out
+            ufw allow 22/tcp
+
+            # Allow standard web ports
+            ufw allow 80/tcp
+            ufw allow 443/tcp
+
+            # Allow port 4000 — the app's serve port
+            ufw allow 4000/tcp
+
+            # Enable firewall non-interactively
+            ufw --force enable
+
+            echo "=== Firewall Status ==="
+            ufw status verbose
+          ENDSSH
+
+      - name: Deploy Files to Server
+        env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           SERVER_USER: root
           TARGET_DIR: ${{ secrets.TARGET_DIR }}
         run: |
-          # Create SSH configuration directory
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-
-          # Write the private key to standard ssh file path
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-          # Scan server host keys and append them to known_hosts to avoid interactive terminal prompt
-          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
-
-          # Ensure target directory exists on the remote server
+          # Ensure target directory exists
           ssh $SERVER_USER@$SERVER_HOST "mkdir -p $TARGET_DIR"
 
-          # Synchronize build assets to server target folder using rsync
+          # Sync built dist/ files to server
           rsync -ravz --delete dist/ $SERVER_USER@$SERVER_HOST:$TARGET_DIR
 
-          # Fix ownership and permissions for Nginx to read the deployed files
-          ssh $SERVER_USER@$SERVER_HOST "chown -R www-data:www-data $TARGET_DIR && find $TARGET_DIR -type d -exec chmod 755 {} \; && find $TARGET_DIR -type f -exec chmod 644 {} \;"
+          # Fix file permissions
+          ssh $SERVER_USER@$SERVER_HOST "find $TARGET_DIR -type d -exec chmod 755 {} \; && find $TARGET_DIR -type f -exec chmod 644 {} \;"
 
-      - name: Open Firewall Ports on Server
+      - name: Start / Restart App on Port 4000 via PM2
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           SERVER_USER: root
+          TARGET_DIR: ${{ secrets.TARGET_DIR }}
         run: |
-          # SSH in and configure ufw to allow all required ports
-          ssh $SERVER_USER@$SERVER_HOST << 'ENDSSH'
-            # Install ufw if not present
-            apt-get install -y ufw 2>/dev/null || true
+          ssh $SERVER_USER@$SERVER_HOST bash << ENDSSH
+            set -e
 
-            # Allow SSH (port 22) first — never lock ourselves out
-            ufw allow 22/tcp
+            # Install Node.js if not present
+            if ! command -v node &> /dev/null; then
+              curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+              apt-get install -y nodejs
+            fi
 
-            # Allow HTTP and HTTPS for Nginx
-            ufw allow 80/tcp
-            ufw allow 443/tcp
+            # Install PM2 globally if not present
+            if ! command -v pm2 &> /dev/null; then
+              npm install -g pm2
+            fi
 
-            # Allow Vite dev server port (used for preview/serve)
-            ufw allow 5173/tcp
+            # Install serve globally if not present
+            if ! command -v serve &> /dev/null; then
+              npm install -g serve
+            fi
 
-            # Allow Node.js server port if using serve/pm2 directly
-            ufw allow 3000/tcp
+            # Stop existing app instance if running (ignore error if not found)
+            pm2 stop verdant-cafe 2>/dev/null || true
+            pm2 delete verdant-cafe 2>/dev/null || true
 
-            # Enable ufw non-interactively (--force skips "may disrupt ssh" prompt)
-            ufw --force enable
+            # Start serving the built files on port 4000
+            pm2 start serve --name verdant-cafe -- -s $TARGET_DIR -l 4000
 
-            # Show current firewall status
-            ufw status verbose
+            # Save PM2 process list so it auto-starts on server reboot
+            pm2 save
+
+            # Register PM2 to start on system boot
+            pm2 startup systemd -u root --hp /root | tail -1 | bash || true
+
+            echo "=== App running on port 4000 ==="
+            pm2 list
           ENDSSH
