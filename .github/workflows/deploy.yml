@@ -35,20 +35,51 @@ jobs:
           # Create SSH configuration directory
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          
+
           # Write the private key to standard ssh file path
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          
+
           # Scan server host keys and append them to known_hosts to avoid interactive terminal prompt
           ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
-          
+
           # Ensure target directory exists on the remote server
           ssh $SERVER_USER@$SERVER_HOST "mkdir -p $TARGET_DIR"
-          
+
           # Synchronize build assets to server target folder using rsync
           rsync -ravz --delete dist/ $SERVER_USER@$SERVER_HOST:$TARGET_DIR
-          
+
           # Fix ownership and permissions for Nginx to read the deployed files
           ssh $SERVER_USER@$SERVER_HOST "chown -R www-data:www-data $TARGET_DIR && find $TARGET_DIR -type d -exec chmod 755 {} \; && find $TARGET_DIR -type f -exec chmod 644 {} \;"
+
+      - name: Open Firewall Ports on Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: root
+        run: |
+          # SSH in and configure ufw to allow all required ports
+          ssh $SERVER_USER@$SERVER_HOST << 'ENDSSH'
+            # Install ufw if not present
+            apt-get install -y ufw 2>/dev/null || true
+
+            # Allow SSH (port 22) first — never lock ourselves out
+            ufw allow 22/tcp
+
+            # Allow HTTP and HTTPS for Nginx
+            ufw allow 80/tcp
+            ufw allow 443/tcp
+
+            # Allow Vite dev server port (used for preview/serve)
+            ufw allow 5173/tcp
+
+            # Allow Node.js server port if using serve/pm2 directly
+            ufw allow 3000/tcp
+
+            # Enable ufw non-interactively (--force skips "may disrupt ssh" prompt)
+            ufw --force enable
+
+            # Show current firewall status
+            ufw status verbose
+          ENDSSH
