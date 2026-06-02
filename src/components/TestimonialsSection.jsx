@@ -9,7 +9,7 @@ const TESTIMONIALS = [
     initials: 'AO',
     color: 'from-amber-700 to-amber-900',
     rating: 5,
-    quote: 'I've visited cafés across Europe, but Verdant\'s Ethiopian single-origin is something else entirely. The fruit-forward notes are extraordinary — like drinking a liquid story.',
+    quote: `I've visited cafés across Europe, but Verdant's Ethiopian single-origin is something else entirely. The fruit-forward notes are extraordinary — like drinking a liquid story.`,
     drink: 'Ethiopia Yirgacheffe',
   },
   {
@@ -54,7 +54,7 @@ const TESTIMONIALS = [
     initials: 'JW',
     color: 'from-slate-600 to-slate-800',
     rating: 5,
-    quote: 'As a coffee journalist, I\'ve tasted thousands of cups. Verdant\'s espresso is one of the most technically perfect shots I\'ve had. A must-visit for any serious coffee lover.',
+    quote: `As a coffee journalist, I've tasted thousands of cups. Verdant's espresso is one of the most technically perfect shots I've had. A must-visit for any serious coffee lover.`,
     drink: 'Espresso Classico',
   },
 ];
