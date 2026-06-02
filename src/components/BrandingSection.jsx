@@ -1,17 +1,71 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import CoffeeCup from './CoffeeCup';
 import CoffeeBeans from './CoffeeBeans';
 
+const STATS = [
+  { value: 500, suffix: 'K+', label: 'Cups Served' },
+  { value: 12,  suffix: '',   label: 'Countries' },
+  { value: 4.9, suffix: '★',  label: 'Avg Rating', isDecimal: true },
+];
+
+function AnimatedCounter({ value, suffix, label, isDecimal, delay = 0 }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setInView(true); },
+      { threshold: 0.6 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView) return;
+    const duration = 1600;
+    const startTime = performance.now();
+    const tick = (now) => {
+      const elapsed = now - startTime - delay * 1000;
+      if (elapsed < 0) { requestAnimationFrame(tick); return; }
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(isDecimal ? (eased * value).toFixed(1) : Math.round(eased * value));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [inView, value, delay, isDecimal]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: delay }}
+      className="flex flex-col items-center gap-1.5"
+    >
+      <span className="font-playfair font-black text-4xl md:text-5xl text-brand-cream tracking-tight">
+        {count}{suffix}
+      </span>
+      <span className="text-[10px] font-bold font-montserrat uppercase tracking-[0.25em] text-brand-caramel/70">
+        {label}
+      </span>
+    </motion.div>
+  );
+}
+
 export default function BrandingSection() {
   return (
-    <section className="relative py-32 bg-brand-espresso overflow-hidden w-full select-none" id="about-brand">
+    <section className="relative py-32 overflow-hidden w-full select-none bg-mesh-warm" id="about-brand">
       
       {/* Floating background beans */}
       <CoffeeBeans count={6} lightMode={false} />
 
-      {/* Central warm ambient blur */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-caramel/10 rounded-full blur-[160px] pointer-events-none" />
+      {/* Top gradient fade */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-brand-espresso/60 to-transparent pointer-events-none z-0" />
 
       {/* Big typography watermark */}
       <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none select-none z-0 overflow-hidden">
@@ -23,8 +77,8 @@ export default function BrandingSection() {
         </h2>
       </div>
 
-      {/* Scrolling brand ribbon */}
-      <div className="absolute top-1/3 left-0 right-0 h-14 bg-brand-primary/90 flex items-center z-10 origin-center rotate-[-3deg] scale-105 shadow-warm-lg border-y border-brand-caramel/20">
+      {/* Scrolling brand ribbon 1 — forward */}
+      <div className="absolute top-[28%] left-0 right-0 h-14 bg-brand-primary/90 flex items-center z-10 origin-center rotate-[-3deg] scale-105 shadow-warm-lg border-y border-brand-caramel/20">
         <div className="w-full overflow-hidden whitespace-nowrap flex py-2 select-none">
           <div className="animate-marquee flex gap-16 text-brand-cream font-montserrat font-black text-lg md:text-xl tracking-widest uppercase">
             {Array.from({ length: 8 }).map((_, i) => (
@@ -34,6 +88,22 @@ export default function BrandingSection() {
           <div className="animate-marquee flex gap-16 text-brand-cream font-montserrat font-black text-lg md:text-xl tracking-widest uppercase" aria-hidden="true">
             {Array.from({ length: 8 }).map((_, i) => (
               <span key={i}>VERDANT CAFÉ &nbsp;·&nbsp; EST. 2026</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Scrolling brand ribbon 2 — reverse (bottom) */}
+      <div className="absolute bottom-[28%] left-0 right-0 h-12 bg-brand-caramel/25 flex items-center z-10 origin-center rotate-[2deg] scale-105 border-y border-brand-caramel/15">
+        <div className="w-full overflow-hidden whitespace-nowrap flex py-2 select-none">
+          <div className="animate-marquee-reverse flex gap-14 text-brand-cream/70 font-montserrat font-bold text-sm md:text-base tracking-[0.25em] uppercase">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <span key={i}>SINGLE ORIGIN &nbsp;·&nbsp; ARTISAN ROAST &nbsp;·&nbsp; HANDCRAFTED</span>
+            ))}
+          </div>
+          <div className="animate-marquee-reverse flex gap-14 text-brand-cream/70 font-montserrat font-bold text-sm md:text-base tracking-[0.25em] uppercase" aria-hidden="true">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <span key={i}>SINGLE ORIGIN &nbsp;·&nbsp; ARTISAN ROAST &nbsp;·&nbsp; HANDCRAFTED</span>
             ))}
           </div>
         </div>
@@ -49,13 +119,23 @@ export default function BrandingSection() {
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.6 }}
-              className="bg-brand-cream/8 backdrop-blur-sm p-7 rounded-3xl max-w-sm border border-brand-cream/12 text-left"
+              transition={{ duration: 0.7 }}
+              className="glass-dark p-7 rounded-3xl max-w-sm border border-brand-caramel/20 text-left relative overflow-hidden"
             >
-              <div className="text-4xl font-playfair text-brand-caramel/40 leading-none mb-3 select-none">"</div>
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-caramel/40 to-transparent" />
+              <div className="text-5xl font-playfair text-brand-caramel/50 leading-none mb-3 select-none">"</div>
               <p className="text-brand-cream/85 font-poppins text-sm md:text-base leading-relaxed">
                 At Verdant Café, every single coffee bean is roasted to perfection — ensuring that every sip becomes a story of rich flavor and warmth.
               </p>
+              <div className="mt-5 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-brand-caramel/40 flex items-center justify-center text-xs font-bold font-montserrat text-brand-cream">
+                  E.M
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold font-montserrat text-brand-cream">Elena Moretti</p>
+                  <p className="text-[10px] text-brand-cream/50 font-poppins">Head Roastmaster</p>
+                </div>
+              </div>
             </motion.div>
           </div>
 
@@ -66,7 +146,10 @@ export default function BrandingSection() {
               whileInView={{ scale: 1, opacity: 1 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+              className="relative"
             >
+              {/* Glow ring */}
+              <div className="absolute inset-0 rounded-full bg-brand-caramel/15 blur-[60px] scale-110" />
               <CoffeeCup
                 size="w-64 h-64 md:w-80 md:h-80 lg:w-[360px] lg:h-[360px]"
                 rotation={5}
@@ -83,18 +166,41 @@ export default function BrandingSection() {
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-100px' }}
-              transition={{ duration: 0.6 }}
-              className="bg-brand-cream/8 backdrop-blur-sm p-7 rounded-3xl max-w-sm border border-brand-cream/12 text-left"
+              transition={{ duration: 0.7 }}
+              className="glass-dark p-7 rounded-3xl max-w-sm border border-brand-caramel/20 text-left relative overflow-hidden"
             >
-              <div className="text-4xl font-playfair text-brand-caramel/40 leading-none mb-3 select-none">"</div>
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-caramel/40 to-transparent" />
+              <div className="text-5xl font-playfair text-brand-caramel/50 leading-none mb-3 select-none">"</div>
               <p className="text-brand-cream/85 font-poppins text-sm md:text-base leading-relaxed">
                 We craft premium selections using custom milk, cream, and toppings blends — redesigning standard coffee habits into luxurious, cinematic café moments.
               </p>
+              <div className="mt-5 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-brand-primary/40 flex items-center justify-center text-xs font-bold font-montserrat text-brand-cream">
+                  K.L
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold font-montserrat text-brand-cream">Kenji Larsson</p>
+                  <p className="text-[10px] text-brand-cream/50 font-poppins">Founder & Barista</p>
+                </div>
+              </div>
             </motion.div>
           </div>
 
         </div>
+
+        {/* Animated Stats Row */}
+        <div className="mt-24 grid grid-cols-3 gap-8 w-full max-w-2xl">
+          <div className="col-span-3 h-px bg-gradient-to-r from-transparent via-brand-caramel/25 to-transparent mb-4" />
+          {STATS.map((stat, i) => (
+            <AnimatedCounter key={i} {...stat} delay={i * 0.15} />
+          ))}
+          <div className="col-span-3 h-px bg-gradient-to-r from-transparent via-brand-caramel/25 to-transparent mt-4" />
+        </div>
+
       </div>
+
+      {/* Bottom gradient fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-brand-espresso/40 to-transparent pointer-events-none z-0" />
     </section>
   );
 }

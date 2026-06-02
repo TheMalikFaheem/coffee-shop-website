@@ -11,7 +11,9 @@
   }
 }
 
-/* Custom Scrollbar — warm parchment style */
+/* ============================================================
+   CUSTOM SCROLLBAR — warm parchment style
+   ============================================================ */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -26,7 +28,9 @@
   background: #8B5E3C;
 }
 
-/* Glassmorphism — warm cream style */
+/* ============================================================
+   GLASSMORPHISM
+   ============================================================ */
 .glass-card {
   background: rgba(246, 241, 234, 0.65);
   backdrop-filter: blur(16px);
@@ -41,13 +45,22 @@
   border-bottom: 1px solid rgba(139, 94, 60, 0.1);
 }
 
-/* Warm glow utilities */
+.glass-dark {
+  background: rgba(43, 29, 23, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(185, 128, 93, 0.15);
+}
+
+/* ============================================================
+   WARM GLOW UTILITIES
+   ============================================================ */
 .glow-warm {
   box-shadow: 0 0 30px rgba(185, 128, 93, 0.30);
 }
 
 .glow-btn:hover {
-  box-shadow: 0 8px 28px rgba(139, 94, 60, 0.35);
+  box-shadow: 0 8px 28px rgba(139, 94, 60, 0.40);
   transform: translateY(-2px);
 }
 
@@ -55,7 +68,13 @@
   box-shadow: 0 15px 45px rgba(139, 94, 60, 0.25);
 }
 
-/* Cream gradient backgrounds */
+.glow-gold {
+  box-shadow: 0 0 40px rgba(201, 150, 58, 0.45), 0 0 80px rgba(201, 150, 58, 0.18);
+}
+
+/* ============================================================
+   GRADIENT BACKGROUNDS
+   ============================================================ */
 .bg-cream-gradient {
   background: linear-gradient(160deg, #F6F1EA 0%, #F3E7DA 50%, #E9DDCF 100%);
 }
@@ -64,18 +83,136 @@
   background: linear-gradient(160deg, #F3E7DA 0%, #EFE4D6 50%, #E9DDCF 100%);
 }
 
-/* Text stroke for editorial watermark effects */
+.bg-mesh-warm {
+  background-color: #4B3226;
+  background-image:
+    radial-gradient(at 25% 35%, rgba(185,128,93,0.22) 0px, transparent 55%),
+    radial-gradient(at 75% 65%, rgba(139,94,60,0.18) 0px, transparent 50%),
+    radial-gradient(at 50% 10%, rgba(201,150,58,0.12) 0px, transparent 45%),
+    radial-gradient(at 10% 80%, rgba(111,74,53,0.20) 0px, transparent 40%);
+  animation: mesh-shift 12s ease-in-out infinite;
+}
+
+@keyframes mesh-shift {
+  0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+  50%       { filter: hue-rotate(6deg) brightness(1.04); }
+}
+
+/* ============================================================
+   TEXT EFFECTS
+   ============================================================ */
 .text-stroke-warm {
   -webkit-text-stroke: 1.5px rgba(139, 94, 60, 0.12);
   color: transparent;
 }
 
-/* Smooth transitions */
-.transition-smooth {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+.text-gradient-gold {
+  background: linear-gradient(135deg, #C9963A 0%, #B9805D 50%, #8B5E3C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Organic blob decorative shapes */
+.text-gradient-cream {
+  background: linear-gradient(135deg, #F6F1EA 0%, #F3E7DA 60%, #EFE4D6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   SHIMMER EFFECT
+   ============================================================ */
+.shimmer-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.12) 50%,
+    transparent 60%
+  );
+  animation: shimmer-pass 3.5s ease-in-out infinite;
+}
+
+@keyframes shimmer-pass {
+  0%   { left: -60%; }
+  60%, 100% { left: 120%; }
+}
+
+/* ============================================================
+   GRADIENT BORDER (rotating animated border for featured cards)
+   ============================================================ */
+.gradient-border {
+  position: relative;
+  border: none !important;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    #C9963A, #B9805D, #8B5E3C, #4B3226, #8B5E3C, #B9805D, #C9963A
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-spin 4s linear infinite;
+}
+
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ============================================================
+   GRAIN / NOISE TEXTURE OVERLAY
+   ============================================================ */
+.grain-overlay {
+  position: relative;
+}
+
+.grain-overlay::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.025;
+  z-index: 9999;
+  animation: grain 8s steps(10) infinite;
+}
+
+/* ============================================================
+   CARD 3D TILT (CSS perspective)
+   ============================================================ */
+.tilt-card {
+  transition: transform 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.tilt-card:hover {
+  transform: perspective(800px) rotateX(-4deg) rotateY(4deg) scale(1.02);
+}
+
+/* ============================================================
+   BLOB SHAPES
+   ============================================================ */
 .blob-1 {
   border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
 }
@@ -84,7 +221,34 @@
   border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
 }
 
-/* Noise texture overlay for premium feel */
+/* ============================================================
+   PROCESS TIMELINE CONNECTOR
+   ============================================================ */
+.timeline-connector {
+  position: relative;
+}
+
+.timeline-connector::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -50%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #8B5E3C, transparent);
+  transform: translateY(-50%);
+}
+
+/* ============================================================
+   SMOOTH TRANSITIONS
+   ============================================================ */
+.transition-smooth {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   TEXTURE OVERLAY (legacy)
+   ============================================================ */
 .texture-overlay::before {
   content: '';
   position: absolute;
@@ -92,4 +256,55 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
   pointer-events: none;
   opacity: 0.04;
+}
+
+/* ============================================================
+   CONFETTI BURST (for form success)
+   ============================================================ */
+@keyframes confetti-fall {
+  0%   { transform: translateY(-10px) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(80px) rotate(360deg) scale(0.5); opacity: 0; }
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: confetti-fall 1.2s ease-out forwards;
+}
+
+/* ============================================================
+   STAT COUNTER ANIMATION
+   ============================================================ */
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   PULSE RING (for CTA buttons)
+   ============================================================ */
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.pulse-ring::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 2px solid currentColor;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+/* ============================================================
+   WAVE DIVIDER
+   ============================================================ */
+.wave-divider {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
 }

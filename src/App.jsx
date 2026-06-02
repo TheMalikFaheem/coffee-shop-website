@@ -6,6 +6,8 @@ import ProductPreviewSlider from './components/ProductPreviewSlider';
 import BrandingSection from './components/BrandingSection';
 import PopularSection from './components/PopularSection';
 import IngredientsHighlight from './components/IngredientsHighlight';
+import TestimonialsSection from './components/TestimonialsSection';
+import ExperienceSection from './components/ExperienceSection';
 import BlogPreview from './components/BlogPreview';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
@@ -70,8 +72,14 @@ function AppContent() {
           {/* Branding statement section */}
           <BrandingSection />
 
+          {/* Testimonials — worldwide guest reviews */}
+          <TestimonialsSection />
+
           {/* Ingredients Showcase cards */}
           <IngredientsHighlight />
+
+          {/* Visit Our Café experience section */}
+          <ExperienceSection />
 
           {/* Blog/Journal preview grid */}
           <BlogPreview />
